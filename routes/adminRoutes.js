@@ -138,7 +138,7 @@ router.get("/getAllEditor", valid, async (req, res) => {
     if (err) {
       res.sendStatus(403);
     } else {
-      db.admin
+      await db.admin
         .findAll({
           where: {
             interface: "editor",
