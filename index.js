@@ -12,6 +12,7 @@ const adminRoutes = require("./routes/adminRoutes");
 const adminCategory = require("./routes/adminCategory");
 const adminSpeciality = require("./routes/adminSpeciality");
 const adminAllNews = require("./routes/adminAllNews");
+const notification = require("./routes/notification");
 
 const option = {
   definition: {
@@ -44,6 +45,7 @@ app.use("/", adminRoutes);
 app.use("/", adminCategory);
 app.use("/", adminSpeciality);
 app.use("/", adminAllNews);
+app.use("/", notification);
 
 app.use("/images", express.static("./images"));
 

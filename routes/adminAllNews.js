@@ -6,6 +6,7 @@ const db = require("../models");
 const valid = require("../authenication/valid");
 const multer = require("multer");
 const path = require("path");
+const axios = require("axios");
 
 router.use(cors());
 
@@ -60,8 +61,21 @@ router.post("/addAllNews", valid, upload, async (req, res) => {
           if (!user) {
             await db.allNews
               .create(allData)
-              .then((news) => {
+              .then(async (news) => {
                 res.send(`Hi ${news.reporter} your news posted successfully`);
+                if (news.publish) {
+                  await axios.post(
+                    `https://app.nativenotify.com/api/indie/notification`,
+                    {
+                      subID: `2`,
+                      appId: 1074,
+                      appToken: "IESJ4vJMKa0qwwwqbSgT0z",
+                      title: `${news.category}`,
+                      message: `${news.title}`,
+                      pushData: { screenName: "TaipingNews" },
+                    }
+                  );
+                }
               })
               .catch((err) => res.send(err.message));
           } else {
@@ -150,8 +164,21 @@ router.put("/updateAllNews/:id", valid, upload, async (req, res) => {
             },
           }
         )
-        .then((user) => {
+        .then(async (user) => {
           res.send("Updated Successfully");
+          if (user.publish && user.breaking) {
+            await axios.post(
+              `https://app.nativenotify.com/api/indie/notification`,
+              {
+                subID: `2`,
+                appId: 1074,
+                appToken: "IESJ4vJMKa0qwwwqbSgT0z",
+                title: `${user.category}`,
+                message: `${user.title}`,
+                pushData: { screenName: "TaipingNews" },
+              }
+            );
+          }
         })
         .catch((err) => res.send(err.message));
     }
@@ -175,7 +202,7 @@ router.put("/updateAllNewsPublish/:id", valid, async (req, res) => {
           }
         )
         .then((user) => {
-          res.send("Updated Successfully");
+          res.send(user);
         })
         .catch((err) => res.send(err.message));
     }

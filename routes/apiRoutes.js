@@ -63,7 +63,8 @@ router.post("/login", async (req, res) => {
         if (bcrypt.compareSync(req.body.password, user.password)) {
           let token = jwt.sign(user.name, process.env.SECRET_KEY);
           let email = user.email;
-          res.send({ token, email });
+          let id = user.id;
+          res.send({ token, email, id });
         } else {
           res.send("Password mismatch");
         }

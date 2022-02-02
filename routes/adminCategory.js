@@ -4,6 +4,7 @@ const db = require("../models");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
 const valid = require("../authenication/valid");
+const axios = require("axios");
 
 router.use(cors());
 
@@ -25,8 +26,19 @@ router.post("/addCategory", valid, async (req, res) => {
           if (!data) {
             db.category
               .create(userData)
-              .then((user) => {
+              .then(async (user) => {
                 res.send(user.name + " " + "Added Succesfully");
+                await axios.post(
+                  `https://app.nativenotify.com/api/indie/notification`,
+                  {
+                    subID: `2`,
+                    appId: 1074,
+                    appToken: "IESJ4vJMKa0qwwwqbSgT0z",
+                    title: `Taiping News`,
+                    message: `${user.name} category was added in your Application`,
+                    pushData: { screenName: "TaipingNews" },
+                  }
+                );
               })
               .catch((err) => {
                 res.send(err.message);
