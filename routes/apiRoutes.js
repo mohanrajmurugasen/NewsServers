@@ -11,7 +11,7 @@ router.use(cors());
 process.env.SECRET_KEY = "user";
 
 router.get("/", (req, res) => {
-  res.send("Welcome Buddies !!!");
+  res.send("Welcome Buddies !!");
 });
 
 router.post("/register", (req, res) => {
