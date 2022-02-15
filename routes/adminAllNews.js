@@ -64,17 +64,13 @@ router.post("/addAllNews", valid, upload, async (req, res) => {
               .then(async (news) => {
                 res.send(`Hi ${news.reporter} your news posted successfully`);
                 if (news.publish) {
-                  await axios.post(
-                    `https://app.nativenotify.com/api/indie/notification`,
-                    {
-                      subID: `2`,
-                      appId: 1074,
-                      appToken: "IESJ4vJMKa0qwwwqbSgT0z",
-                      title: `${news.category}`,
-                      message: `${news.title}`,
-                      pushData: { screenName: "TaipingNews" },
-                    }
-                  );
+                  await axios.post("https://exp.host/--/api/v2/push/send", {
+                    to: "ExponentPushToken[3oELjEDdLscMtxMPWGgMnW]",
+                    sound: "default",
+                    title: `${news.category}`,
+                    body: `${news.title}`,
+                    data: { someData: "goes here" },
+                  });
                 }
               })
               .catch((err) => res.send(err.message));
