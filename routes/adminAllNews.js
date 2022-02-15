@@ -65,7 +65,7 @@ router.post("/addAllNews", valid, upload, async (req, res) => {
                 res.send(`Hi ${news.reporter} your news posted successfully`);
                 if (news.publish) {
                   await axios.post("https://exp.host/--/api/v2/push/send", {
-                    to: "ExponentPushToken[3oELjEDdLscMtxMPWGgMnW]",
+                    to: "ExponentPushToken[RB1dFpPxwt3s7LZSkcGoI4]",
                     sound: "default",
                     title: `${news.category}`,
                     body: `${news.title}`,
