@@ -64,17 +64,22 @@ router.post("/addAllNews", valid, upload, async (req, res) => {
               .then(async (news) => {
                 res.send(`Hi ${news.reporter} your news posted successfully`);
                 if (news.publish) {
-                  await axios.post(
-                    `https://app.nativenotify.com/api/indie/notification`,
-                    {
-                      subID: `2`,
-                      appId: 2146,
-                      appToken: "FqP0rCc8mdwaVbjGYheMij",
-                      title: `${news.category}`,
-                      message: `${news.title}`,
-                      pushData: { screenName: "TaipingNews" },
-                    }
-                  );
+                  await db.new.findAll().then((push) => {
+                    push.map(async (itm) => {
+                      await axios.post(
+                        `https://app.nativenotify.com/api/indie/notification`,
+                        {
+                          subID: `${itm.id}`,
+                          appId: 2146,
+                          appToken: "FqP0rCc8mdwaVbjGYheMij",
+                          title: `${news.category}`,
+                          message: `${news.title}`,
+                          pushData: { screenName: "TaipingNews" },
+                        }
+                      );
+                    });
+                  });
+
                   // await axios.post("https://exp.host/--/api/v2/push/send", {
                   //   to: "ExponentPushToken[FRnit7Bd_3Iy2AX8dbIq7f]",
                   //   sound: "default",
@@ -173,18 +178,22 @@ router.put("/updateAllNews/:id", valid, upload, async (req, res) => {
         )
         .then(async (user) => {
           res.send("Updated Successfully");
-          if (user.publish && user.breaking) {
-            await axios.post(
-              `https://app.nativenotify.com/api/indie/notification`,
-              {
-                subID: `2`,
-                appId: 1074,
-                appToken: "IESJ4vJMKa0qwwwqbSgT0z",
-                title: `${user.category}`,
-                message: `${user.title}`,
-                pushData: { screenName: "TaipingNews" },
-              }
-            );
+          if (user.publish) {
+            await db.new.findAll().then((push) => {
+              push.data.map(async (itm) => {
+                await axios.post(
+                  `https://app.nativenotify.com/api/indie/notification`,
+                  {
+                    subID: `${itm.id}`,
+                    appId: 1074,
+                    appToken: "IESJ4vJMKa0qwwwqbSgT0z",
+                    title: `${user.category}`,
+                    message: `${user.title}`,
+                    pushData: { screenName: "TaipingNews" },
+                  }
+                );
+              });
+            });
           }
         })
         .catch((err) => res.send(err.message));
